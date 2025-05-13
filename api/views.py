@@ -27,3 +27,10 @@ class ProfileView(APIView):
             "email": user.email,
             "role": user.role
         })
+
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+class DataView(APIView):
+    def get(self, request):
+        return Response({"pesan": "Halo dari backend Django!"})

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'api',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -50,7 +51,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
+
 
 ROOT_URLCONF = 'arunikan_api.urls'
 
@@ -75,14 +78,16 @@ WSGI_APPLICATION = 'arunikan_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+AUTH_USER_MODEL = 'api.User'
+
 DATABASES = {
-  'default': {
+    'default': {
         'ENGINE': 'django.db.backends.mysql',
-       'NAME': 'arunikan_db',
-      'USER': 'root',
-       'PASSWORD':'', 
-      'PORT': '3306',
-        
+        'NAME': 'arunikan_db',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
@@ -129,3 +134,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'api.User'
+CORS_ALLOW_ALL_ORIGINS = True  # hanya untuk dev
