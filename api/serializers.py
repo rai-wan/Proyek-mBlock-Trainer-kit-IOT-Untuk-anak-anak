@@ -2,6 +2,9 @@ from rest_framework import serializers
 from .models import User
 from django.contrib.auth.password_validation import validate_password
 
+from rest_framework import serializers
+from .models import Ikan
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -20,3 +23,8 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+
+class IkanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ikan
+        fields = '__all__'

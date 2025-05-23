@@ -1,11 +1,18 @@
-from django.urls import path
-from .views import RegisterView, LoginView, ProfileView
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import IkanViewSet, RegisterView, LoginView, ProfileView
 from rest_framework_simplejwt.views import TokenRefreshView
 
+router = DefaultRouter()
+router.register(r'ikan', IkanViewSet, basename='ikan')
+
 urlpatterns = [
-    path('register/', RegisterView.as_view(), name='register'),
-    path('login/', LoginView.as_view(), name='login'),
-    path('profile/', ProfileView.as_view(), name='profile'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('', include(router.urls)),
+
+    # Auth user
+    path('account/register/', RegisterView.as_view()),
+    path('account/login/', LoginView.as_view()),
+    path('account/token/refresh/', TokenRefreshView.as_view()),
+    path('account/profile/', ProfileView.as_view()),
 ]
 

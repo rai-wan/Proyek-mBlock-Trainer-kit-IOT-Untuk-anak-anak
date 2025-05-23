@@ -1,21 +1,26 @@
 from django.shortcuts import render
-
-# Create your views here.
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from .models import User
-from .serializers import UserSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from .models import User, Ikan
+from .serializers import UserSerializer, IkanSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+
+# Register akun
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [AllowAny]
 
+
+# Login JWT
 class LoginView(TokenObtainPairView):
-    pass
+    permission_classes = [AllowAny]
 
+
+# Ambil profil user
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -28,9 +33,15 @@ class ProfileView(APIView):
             "role": user.role
         })
 
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
+# Data dummy
 class DataView(APIView):
     def get(self, request):
         return Response({"pesan": "Halo dari backend Django!"})
+
+
+# CRUD Ikan — ✅ tanpa login
+class IkanViewSet(viewsets.ModelViewSet):
+    queryset = Ikan.objects.all()
+    serializer_class = IkanSerializer
+    permission_classes = [AllowAny]  # ✅ Akses publik tanpa token
