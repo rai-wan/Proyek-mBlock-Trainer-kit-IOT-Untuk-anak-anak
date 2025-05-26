@@ -3,8 +3,8 @@ from rest_framework import generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import User, Ikan
-from .serializers import UserSerializer, IkanSerializer
+from .models import User, Kategori, Promo, Produk, Pembayaran, Trans_h, Trans_d
+from .serializers import *
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 
@@ -19,7 +19,31 @@ class RegisterView(generics.CreateAPIView):
 class LoginView(TokenObtainPairView):
     permission_classes = [AllowAny]
 
+# KATEGORI
+class KategoriListCreate(generics.ListCreateAPIView):
+    queryset = Kategori.objects.all()
+    serializer_class = KategoriSerializer
 
+# PROMO
+class PromoListCreate(generics.ListCreateAPIView):
+    queryset = Promo.objects.all()
+    serializer_class = PromoSerializer
+
+# PEMBAYARAN
+class PembayaranListCreate(generics.ListCreateAPIView):
+    queryset = Pembayaran.objects.all()
+    serializer_class = PembayaranSerializer
+
+# TRANSAKSI HEADER
+class TransHListCreate(generics.ListCreateAPIView):
+    queryset = Trans_h.objects.all()
+    serializer_class = TransHSerializer
+
+# TRANSAKSI DETAIL
+class TransDListCreate(generics.ListCreateAPIView):
+    queryset = Trans_d.objects.all()
+    serializer_class = TransDSerializer
+    
 # Ambil profil user
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
@@ -40,8 +64,8 @@ class DataView(APIView):
         return Response({"pesan": "Halo dari backend Django!"})
 
 
-# CRUD Ikan — ✅ tanpa login
-class IkanViewSet(viewsets.ModelViewSet):
-    queryset = Ikan.objects.all()
-    serializer_class = IkanSerializer
+# CRUD produk
+class ProdukViewSet(viewsets.ModelViewSet):
+    queryset = Produk.objects.all()
+    serializer_class = ProdukSerializer
     permission_classes = [AllowAny]  # ✅ Akses publik tanpa token
