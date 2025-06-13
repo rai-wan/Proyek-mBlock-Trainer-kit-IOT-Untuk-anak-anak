@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import User,Kategori, Promo, Produk, Pembayaran, Trans_h, Trans_d
-from django.contrib.auth.password_validation import validate_password
+from .models import User, Kategori, Promo, Produk, Pembayaran, Trans_h, Trans_d
+from .models import Produk, Kategori, Promo
 
-from rest_framework import serializers
-from .models import Produk
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,20 +14,14 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        user = User(
+        user = User.objects.create_user(
             username=validated_data['username'],
-            email=validated_data['email'],
-            role=validated_data.get('role', 'pembeli')
+            password=validated_data['password'],
+            email=validated_data.get('email', ''),
+            role=validated_data.get('role', 'konsumen')
         )
-        user.set_password(validated_data['password'])
-        user.save()
+        
         return user
-
-
-class ProdukSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Produk
-        fields = '__all__'
 
 class KategoriSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,6 +32,36 @@ class PromoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Promo
         fields = '__all__'
+
+from .models import Produk, Kategori, Promo
+
+class ProdukSerializer(serializers.ModelSerializer):
+    kategori = serializers.StringRelatedField(read_only=True)
+    kategori_id = serializers.PrimaryKeyRelatedField(
+        queryset=Kategori.objects.all(), source='kategori', write_only=True
+    )
+
+    promo = serializers.StringRelatedField(read_only=True)  # ⬅️ ubah jadi lowercase "promo"
+    promo_id = serializers.PrimaryKeyRelatedField(
+        queryset=Promo.objects.all(), source='promo', write_only=True
+    )
+
+    gambar = serializers.ImageField(use_url=True, required=False)
+
+    class Meta:
+        model = Produk
+        fields = [
+            'id', 'nama', 'harga', 'stok', 'deskripsi',
+            'kategori', 'kategori_id',
+            'promo', 'promo_id',
+            'gambar', 'last_updated'
+        ]
+
+    def create(self, validated_data):
+        validated_data.pop('kategori', None)
+        validated_data.pop('promo', None)
+        return Produk.objects.create(**validated_data)
+
 
 class PembayaranSerializer(serializers.ModelSerializer):
     class Meta:

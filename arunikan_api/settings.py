@@ -54,6 +54,12 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware'
 ]
 
+# JWT
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 ROOT_URLCONF = 'arunikan_api.urls'
 
@@ -112,8 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
+
 
 LANGUAGE_CODE = 'en-us'
 

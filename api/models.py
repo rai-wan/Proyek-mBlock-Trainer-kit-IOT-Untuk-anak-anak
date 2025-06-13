@@ -8,7 +8,7 @@ from django.forms import DateField
 
 # Model untuk User dengan role
 class User(AbstractUser):
-    role = models.CharField(max_length=50, default='konsumen',choices=[('admin','Admin'),('kasir','Kasir'),('konsumen','Konsumen'),('Suplayer','Suplayer')])
+    role = models.CharField(max_length=50, default='konsumen',choices=[('admin','Admin'),('kasir','Kasir'),('konsumen','Konsumen'),('suplayer','Suplayer')])
 
 #model class 
 class Kategori (models.Model):
@@ -16,7 +16,7 @@ class Kategori (models.Model):
     keterangan = models.TextField(max_length=100, null=True,blank=True) 
     
     def __str__(self):
-        return self.nama_kategori
+        return self.nama_kategori or ""
 
 class Promo (models.Model):
     nama = models.CharField(max_length=100,null=True)
@@ -30,7 +30,7 @@ class Produk(models.Model):
     harga = models.DecimalField(max_digits=10, decimal_places=2)
     stok = models.IntegerField()
     deskripsi = models.TextField(blank=True, null=True)
-    ketegori = models.ForeignKey(Kategori,on_delete=models.CASCADE,null=True)
+    
     gambar = models.ImageField(upload_to='gambar_ikan/', blank=True, null=True)
     last_updated = models.DateTimeField(auto_now=True)
     Promo = models.ForeignKey(Promo,null=True,on_delete=models.CASCADE)
@@ -48,10 +48,12 @@ class Trans_h (models.Model):
     kasir = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='kasir')
     total = models.DecimalField(decimal_places=2,max_digits=10)
     jenis_payment = models.ForeignKey(Pembayaran, on_delete=models.CASCADE,null=True)
+    bukti_pembayaran = models.ImageField(upload_to='bukti_pembayaran/', null=True, blank=True)
 
 class Trans_d (models.Model):
     produk = models.ForeignKey(Produk,on_delete=models.CASCADE,null=True)
     jumlah = models.IntegerField(null=True)
     total = models.DecimalField(decimal_places=2,max_digits=10)
+    
 
 
